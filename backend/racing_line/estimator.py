@@ -14,7 +14,12 @@ from backend.observability.logging import get_logger
 from backend.racing_line.model import RacingLineAnalysis, analyze_lap_racing_line
 from backend.state.race_state import RaceState
 from backend.telemetry.schema import RaceTelemetry
-from simulator.generator.track import SyntheticTrack, default_track
+from simulator.generator.track import (
+    SyntheticTrack,
+    default_track,
+    silverstone_track,
+    suzuka_track,
+)
 
 log = get_logger("racing_line.estimator")
 
@@ -23,9 +28,18 @@ DEGRADATION_TIME_LOSS_THRESHOLD_S = 0.4
 
 class RacingLineEstimator:
     def __init__(self, track: SyntheticTrack | None = None):
-        self._track = track or default_track()
+        self._default_track = track or default_track()
         self._current_lap_frames: dict[str, list[RaceTelemetry]] = defaultdict(list)
         self._analyses: dict[str, list[RacingLineAnalysis]] = defaultdict(list)
+
+    def _resolve_track(self, frame: Optional[RaceTelemetry]) -> SyntheticTrack:
+        if frame and hasattr(frame, "circuit") and frame.circuit:
+            c = str(frame.circuit).lower()
+            if "silverstone" in c:
+                return silverstone_track()
+            if "suzuka" in c:
+                return suzuka_track()
+        return self._default_track
 
     def process_frame(self, frame: RaceTelemetry) -> None:
         """Accumulates a telemetry frame for racing-line corner analysis."""
@@ -63,7 +77,7 @@ class RacingLineEstimator:
             car_id=car_id,
             lap=last_completed_lap,
             frames=lap_frames,
-            track=self._track,
+            track=self._resolve_track(state.latest_frame),
         )
 
         # Check trend for line degradation
