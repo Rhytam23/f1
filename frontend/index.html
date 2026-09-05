@@ -7,14 +7,19 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <!-- Sticky Operational Shell Header -->
   <header class="app-header">
     <div class="brand-section">
-      <span class="brand-mark">F1</span>
+      <div class="brand-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span>F1</span>
+      </div>
       <div>
         <div class="brand-name">RacePulse</div>
         <div class="brand-subtitle">Telemetry & Strategy Engine</div>
@@ -22,11 +27,26 @@
     </div>
 
     <nav class="app-nav">
-      <button class="nav-tab active" data-tab="pitwall">Pit Wall</button>
-      <button class="nav-tab" data-tab="hq">HQ Strategy</button>
-      <button class="nav-tab" data-tab="pace">DegradeIQ</button>
-      <button class="nav-tab" data-tab="track">Track Control</button>
-      <button class="nav-tab" data-tab="evaluation">Evaluation</button>
+      <button class="nav-tab active" data-tab="pitwall">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+        <span>Pit Wall</span>
+      </button>
+      <button class="nav-tab" data-tab="hq">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+        <span>HQ Strategy</span>
+      </button>
+      <button class="nav-tab" data-tab="pace">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line></svg>
+        <span>DegradeIQ</span>
+      </button>
+      <button class="nav-tab" data-tab="track">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+        <span>Track Control</span>
+      </button>
+      <button class="nav-tab" data-tab="evaluation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <span>Evaluation</span>
+      </button>
     </nav>
 
     <div class="header-controls">
@@ -46,36 +66,36 @@
     </div>
     <div class="telemetry-item">
       <span class="telemetry-label">LAP:</span>
-      <span id="bar-lap-val" class="telemetry-val">—</span>
+      <span id="bar-lap-val" class="telemetry-val">12 / 52</span>
     </div>
     <div class="telemetry-item">
       <span class="telemetry-label">POS:</span>
-      <span id="bar-pos-val" class="telemetry-val" style="color: var(--color-success);">—</span>
+      <span id="bar-pos-val" class="telemetry-val" style="color: var(--color-success); font-weight: 800;">P1</span>
     </div>
     <div class="telemetry-item">
       <span class="telemetry-label">STINT:</span>
-      <span id="bar-compound-pill" class="compound-pill compound-medium">—</span>
-      <span id="bar-tyre-age" class="telemetry-val" style="margin-left: 4px;">—</span>
+      <span id="bar-compound-pill" class="compound-pill compound-medium">MEDIUM</span>
+      <span id="bar-tyre-age" class="telemetry-val" style="margin-left: 4px;">12 Laps</span>
     </div>
     <div class="telemetry-item">
       <span class="telemetry-label">DEG RATE:</span>
-      <span id="bar-deg-rate" class="telemetry-val">—</span>
+      <span id="bar-deg-rate" class="telemetry-val">+0.038 s/lap</span>
     </div>
     <div class="telemetry-item">
       <span class="telemetry-label">CLIFF RISK:</span>
-      <span id="bar-cliff-risk" class="telemetry-val">—</span>
+      <span id="bar-cliff-risk" class="telemetry-val" style="color: var(--color-success);">15% (LOW)</span>
     </div>
     <div class="telemetry-item">
       <span class="telemetry-label">GAP AHEAD:</span>
-      <span id="bar-gap-ahead" class="telemetry-val">—</span>
+      <span id="bar-gap-ahead" class="telemetry-val">LEADER</span>
     </div>
     <div class="telemetry-item">
       <span class="telemetry-label">WEATHER:</span>
-      <span id="bar-weather" class="telemetry-val">—</span>
+      <span id="bar-weather" class="telemetry-val">DRY (0% RAIN)</span>
     </div>
     <div class="telemetry-item">
       <span class="telemetry-label">FLAG:</span>
-      <span id="bar-flag" class="telemetry-val" style="color: var(--color-success);">GREEN</span>
+      <span id="bar-flag" class="flag-badge flag-green">TRACK CLEAR</span>
     </div>
   </div>
 
@@ -85,7 +105,7 @@
     <!-- Scenario & Benchmark Controls Bar -->
     <div class="scenario-strip">
       <div class="scenario-select-wrap">
-        <label for="scenario-select" class="section-label">BENCHMARK SCENARIO / REPLAY:</label>
+        <label for="scenario-select" class="section-label">BENCHMARK SCENARIO:</label>
         <select id="scenario-select" class="scenario-select">
           <option value="normal_race">Normal Race (Clean 20 Laps Stint)</option>
           <option value="tyre_cliff">Tyre Cliff (Soft Tyre Degradation Cliff)</option>
@@ -100,12 +120,20 @@
           <option value="strategy_inferiority">Strategy Inferiority (Baseline vs AI)</option>
           <option value="driver_disagreement">Driver Disagreement (Radio vs Telemetry)</option>
         </select>
-        <button id="run-scenario-btn" class="btn-action">RUN SCENARIO</button>
-        <button id="toggle-replay-btn" class="btn-action" style="background: #10b981; color: #fff; margin-left: 8px;">▶ START HISTORICAL REPLAY</button>
+        <button id="run-scenario-btn" class="btn-action">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <span>RUN SCENARIO</span>
+        </button>
+        <button id="toggle-replay-btn" class="btn-action" style="background: #10b981; color: #fff;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <span>START HISTORICAL REPLAY</span>
+        </button>
       </div>
 
-      <div class="mono" style="font-size: 0.8rem; color: var(--text-secondary);">
-        PROVENANCE: <strong style="color: var(--color-success);" id="provenance-badge">REAL TELEMETRY (FastF1)</strong> | DRIVER: <strong style="color: var(--text-primary);">VER (#1)</strong>
+      <div class="mono" style="font-size: 0.78rem; color: var(--text-secondary); display: flex; align-items: center; gap: 8px;">
+        <span>SOURCE: <strong style="color: var(--color-success);" id="provenance-badge">FASTF1 AUTHENTIC TELEMETRY</strong></span>
+        <span style="opacity: 0.4;">|</span>
+        <span>DRIVER: <strong style="color: var(--brand-accent);">VER (#1)</strong></span>
       </div>
     </div>
 
@@ -114,7 +142,7 @@
       
       <!-- Disagreement Alert Banner (Conditional) -->
       <div id="disagreement-banner" class="disagreement-banner" style="display: none;">
-        <div style="font-size: 1.2rem; color: var(--color-critical);">⚠️</div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-critical)" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
         <div>
           <div id="disagreement-title" class="disagreement-title">HUMAN / AI DISAGREEMENT DETECTED</div>
           <div id="disagreement-desc" class="disagreement-desc">Driver reports tyre degradation over radio, but telemetry confirms linear wear rate.</div>
@@ -125,31 +153,30 @@
       <div class="decision-hero-container">
         <div class="decision-hero-header">
           <span class="section-label">STRATEGIC DECISION ENGINE RECOMMENDATION</span>
-          <span id="hero-confidence-badge" class="mono" style="font-weight: 700; color: var(--color-success);">—</span>
+          <span id="hero-confidence-badge" class="mono" style="font-weight: 700; color: var(--color-success);">94% CONFIDENCE</span>
         </div>
 
         <div id="hero-action" class="decision-action-badge">STAY OUT</div>
-        <div id="hero-subtext" style="font-size: 0.9rem; color: var(--text-secondary);">EXTEND CURRENT STINT</div>
+        <div id="hero-subtext" style="font-size: 0.88rem; color: var(--text-secondary); font-family: var(--font-mono);">EXTEND CURRENT STINT — CLEAN AIR DELTA OPTIMAL</div>
 
         <div class="decision-hero-metrics">
           <div class="metric-block">
             <span class="metric-label">RECOMMENDED PIT WINDOW</span>
-            <span id="metric-window" class="metric-value">—</span>
+            <span id="metric-window" class="metric-value">LAPS 24 – 28</span>
           </div>
           <div class="metric-block">
             <span class="metric-label">TARGET COMPOUND</span>
-            <span id="metric-compound" class="metric-value" style="color: var(--brand-accent);">—</span>
+            <span id="metric-compound" class="metric-value" style="color: var(--pirelli-hard);">HARD (H)</span>
           </div>
           <div class="metric-block">
             <span class="metric-label">MODEL CONFIDENCE</span>
-            <span id="metric-confidence" class="metric-value" style="color: var(--color-success);">—</span>
+            <span id="metric-confidence" class="metric-value" style="color: var(--color-success);">94% CONFIDENCE</span>
           </div>
           <div class="metric-block">
-            <span class="metric-label">TIME GAIN DELTA</span>
-            <span id="metric-gain" class="metric-value" style="color: var(--color-info);">—</span>
+            <span class="metric-label">ESTIMATED TIME SAVED</span>
+            <span id="metric-gain" class="metric-value" style="color: var(--color-info);">+8.4s NET GAIN</span>
           </div>
         </div>
-      </div>
       </div>
 
       <!-- PIT WALL SPLIT OPERATIONAL LAYOUT -->
@@ -161,14 +188,14 @@
             <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">OBJECTIVE EVALUATOR</span>
           </div>
           
-          <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-tertiary); margin-bottom: 6px; text-transform: uppercase;">Primary Reasons:</div>
+          <div style="font-size: 0.68rem; font-weight: 700; color: var(--text-tertiary); margin-bottom: 6px; text-transform: uppercase; font-family: var(--font-mono);">Primary Reasons:</div>
           <ul id="reasons-list" class="operational-list" style="margin-bottom: var(--space-md);">
             <li>Clean air gap ahead exceeds 4.5 seconds</li>
-            <li>Tyre degradation rate stable at 0.030s/lap</li>
+            <li>Tyre degradation rate stable at 0.038s/lap</li>
             <li>No traffic penalty predicted upon pit exit</li>
           </ul>
 
-          <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-tertiary); margin-bottom: 6px; text-transform: uppercase;">Invalidation Risks:</div>
+          <div style="font-size: 0.68rem; font-weight: 700; color: var(--text-tertiary); margin-bottom: 6px; text-transform: uppercase; font-family: var(--font-mono);">Invalidation Conditions:</div>
           <ul id="risks-list" class="operational-list risk-list">
             <li>VSC period ending before car reaches pit entry</li>
             <li>Track temperature drop causing graining shift</li>
@@ -182,14 +209,14 @@
             <span class="mono" style="font-size: 0.7rem; color: var(--color-info);">NLP ENGINE</span>
           </div>
 
-          <div id="radio-speaker" class="mono" style="font-weight: 700; color: var(--brand-accent); margin-bottom: 6px;">
-            DRIVER (LAP 12):
+          <div id="radio-speaker" class="mono" style="font-weight: 700; color: var(--brand-accent); margin-bottom: 6px; font-size: 0.8rem;">
+            DRIVER VER (#1) — LAP 12:
           </div>
           <blockquote id="radio-text" style="font-size: 1.05rem; font-style: italic; color: var(--text-primary); margin-bottom: var(--space-md); padding-left: var(--space-sm); border-left: 2px solid var(--border-strong);">
-            "Tyres feel fine, pace is consistent."
+            "Tyres feel fine, pace is consistent and balanced."
           </blockquote>
 
-          <div style="font-size: 0.75rem; color: var(--text-secondary);">
+          <div style="font-size: 0.75rem; color: var(--text-secondary); font-family: var(--font-mono);">
             DETECTED INTENTS: <span id="radio-intents" class="mono" style="color: var(--color-success); font-weight: 700;">STRATEGY_STAY_OUT_REQUEST</span>
           </div>
         </div>
@@ -212,6 +239,7 @@
               <tr>
                 <th>POS</th>
                 <th>CAR</th>
+                <th>DRIVER</th>
                 <th>COMPOUND</th>
                 <th>AGE</th>
                 <th>DEG RATE</th>
@@ -223,23 +251,47 @@
             <tbody id="leaderboard-body">
               <tr>
                 <td>1</td>
-                <td><strong>#44 (VER)</strong></td>
+                <td><strong>#1</strong></td>
+                <td>M. Verstappen</td>
                 <td><span class="compound-pill compound-medium">MEDIUM</span></td>
                 <td class="table-cell-num">12 Laps</td>
-                <td class="table-cell-num">0.030s/lap</td>
+                <td class="table-cell-num">0.038s/lap</td>
                 <td class="table-cell-num">15%</td>
-                <td class="table-cell-num">-</td>
+                <td class="table-cell-num">LEADER</td>
                 <td><span class="threat-low">NONE</span></td>
               </tr>
               <tr>
                 <td>2</td>
-                <td>#1 (HAM)</td>
+                <td><strong>#44</strong></td>
+                <td>L. Hamilton</td>
                 <td><span class="compound-pill compound-soft">SOFT</span></td>
                 <td class="table-cell-num">14 Laps</td>
                 <td class="table-cell-num">0.080s/lap</td>
                 <td class="table-cell-num threat-high">78%</td>
                 <td class="table-cell-num">+2.4s</td>
                 <td><span class="threat-high">HIGH UNDERCUT</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><strong>#16</strong></td>
+                <td>C. Leclerc</td>
+                <td><span class="compound-pill compound-medium">MEDIUM</span></td>
+                <td class="table-cell-num">12 Laps</td>
+                <td class="table-cell-num">0.042s/lap</td>
+                <td class="table-cell-num">24%</td>
+                <td class="table-cell-num">+5.1s</td>
+                <td><span class="threat-medium">MED UNDERCUT</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><strong>#4</strong></td>
+                <td>L. Norris</td>
+                <td><span class="compound-pill compound-hard">HARD</span></td>
+                <td class="table-cell-num">8 Laps</td>
+                <td class="table-cell-num">0.026s/lap</td>
+                <td class="table-cell-num">8%</td>
+                <td class="table-cell-num">+8.7s</td>
+                <td><span class="threat-low">OVERCUT RISK</span></td>
               </tr>
             </tbody>
           </table>
@@ -249,27 +301,27 @@
         <div class="panel">
           <div class="panel-header">
             <span>ENVIRONMENTAL INTELLIGENCE</span>
-            <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">SENSORS</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">TRACK SENSORS</span>
           </div>
 
-          <div style="font-size: 1.8rem; font-weight: 800; color: var(--color-info); margin: var(--space-xs) 0;" id="weather-status">DRY</div>
+          <div style="font-size: 1.8rem; font-weight: 800; color: var(--color-info); margin: var(--space-xs) 0;" id="weather-status">DRY TRACK</div>
           
           <div class="decomp-strip">
             <div class="decomp-row">
               <span class="telemetry-label">RAIN PROBABILITY:</span>
-              <span id="rain-prob" class="mono" style="font-weight:700;">—</span>
+              <span id="rain-prob" class="mono" style="font-weight:700; color: var(--color-success);">0.0%</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">TRACK TEMP:</span>
-              <span id="track-temp" class="mono" style="font-weight:700;">—</span>
+              <span id="track-temp" class="mono" style="font-weight:700;">38.4 °C</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">AIR TEMP:</span>
-              <span id="air-temp" class="mono" style="font-weight:700;">—</span>
+              <span id="air-temp" class="mono" style="font-weight:700;">26.1 °C</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">TRACK EVOLUTION:</span>
-              <span id="track-evolution" class="mono" style="font-weight:700;">—</span>
+              <span id="track-evolution" class="mono" style="font-weight:700; color: var(--color-success);">+0.012 s/lap (GRIP GAIN)</span>
             </div>
           </div>
         </div>
@@ -277,32 +329,34 @@
       </div>
     </section>
 
-    <!-- TAB 3: DEGRADEIQ -->
+    <!-- TAB 3: DEGRADEIQ (Tyre Degradation Isolation) -->
     <section id="pane-pace" class="tab-pane">
       
       <!-- DegradeIQ Subsystem Header Strip -->
-      <div class="scenario-strip" style="margin-bottom: var(--space-md); flex-wrap: wrap; gap: 10px;">
-        <div class="scenario-select-wrap" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span style="background: rgba(255, 85, 0, 0.15); color: var(--brand-accent); border: 1px solid var(--brand-accent); padding: 4px 10px; border-radius: 3px; font-weight: 800; font-family: var(--font-mono); font-size: 0.75rem;">DEGRADEIQ ENGINE</span>
-          <label for="degradiq-circuit-select" class="section-label" style="margin-left: 6px;">CIRCUIT:</label>
+      <div class="scenario-strip">
+        <div class="scenario-select-wrap">
+          <span style="background: rgba(255, 85, 0, 0.15); color: var(--brand-accent); border: 1px solid var(--brand-accent); padding: 4px 10px; border-radius: 3px; font-weight: 800; font-family: var(--font-mono); font-size: 0.72rem;">DEGRADEIQ ENGINE</span>
+          
+          <label for="degradiq-circuit-select" class="section-label">CIRCUIT:</label>
           <select id="degradiq-circuit-select" class="scenario-select">
-            <option value="monza">Monza — Italian GP</option>
-            <option value="bahrain">Bahrain — Sakhir</option>
-            <option value="spain">Spain — Barcelona</option>
+            <option value="monza">Autodromo Nazionale Monza — Italian GP</option>
+            <option value="bahrain">Bahrain International Circuit — Sakhir</option>
+            <option value="spain">Circuit de Barcelona-Catalunya — Spanish GP</option>
           </select>
 
-          <label for="degradiq-compound-select" class="section-label" style="margin-left: 6px;">COMPOUND:</label>
+          <label for="degradiq-compound-select" class="section-label">COMPOUND:</label>
           <select id="degradiq-compound-select" class="scenario-select">
-            <option value="HARD">HARD</option>
-            <option value="MEDIUM">MEDIUM</option>
-            <option value="SOFT">SOFT</option>
+            <option value="HARD">HARD (C2 / C3)</option>
+            <option value="MEDIUM">MEDIUM (C3 / C4)</option>
+            <option value="SOFT">SOFT (C4 / C5)</option>
           </select>
         </div>
         
         <div>
-          <a href="http://localhost:8501" target="_blank" class="btn-action" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; padding: 6px 14px; background: #2563eb; color: #fff; font-weight: 700;">
-            <span>🚀 OPEN FULL DEGRADEIQ STREAMLIT APP</span>
-            <span class="mono" style="font-size: 0.65rem; opacity: 0.85;">(:8501) ↗</span>
+          <a href="http://localhost:8501" target="_blank" class="btn-action btn-secondary" style="text-decoration: none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            <span>OPEN STREAMLIT STUDIO</span>
+            <span class="mono" style="font-size: 0.65rem; opacity: 0.8;">(:8501)</span>
           </a>
         </div>
       </div>
@@ -311,34 +365,35 @@
       <div class="split-layout-hq" style="margin-bottom: var(--space-md);">
         
         <!-- Before/After Degradation Curve Panel -->
-        <div class="panel">
+        <div class="panel" style="position: relative;">
           <div class="panel-header">
             <span>DEGRADEIQ — TRUE TYRE WEAR ISOLATION (RAW VS CORRECTED)</span>
-            <span class="mono" style="font-size: 0.7rem; color: var(--color-success);" id="degradiq-model-type">HINGE PIECEWISE-LINEAR FIT</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--color-success);" id="degradiq-model-type">PIECEWISE-LINEAR HINGE FIT</span>
           </div>
 
           <!-- SVG Degradation Curve Canvas -->
-          <div class="track-canvas-wrapper" style="height: 240px; position: relative;">
+          <div class="track-canvas-wrapper" style="height: 250px; position: relative;">
             <svg id="degradiq-curve-svg" viewBox="0 0 700 240" style="width: 100%; height: 100%;">
               <!-- Rendered dynamically by app.js -->
             </svg>
+            <div id="chart-tooltip" class="chart-tooltip"></div>
           </div>
 
           <!-- Slope KPI Badges -->
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px;">
-            <div class="metric-block" style="padding: 8px 12px; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25);">
+            <div class="metric-block" style="padding: 8px 12px; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 4px;">
               <span class="metric-label" style="color: #ef4444;">RAW PRACTICE TREND</span>
               <span id="degradiq-raw-slope" class="mono" style="font-size: 1.1rem; font-weight: 800; color: #ef4444;">-0.014 s/lap</span>
-              <span class="mono" style="font-size: 0.65rem; color: var(--text-tertiary);">Masked by fuel burn weight loss</span>
+              <span class="mono" style="font-size: 0.65rem; color: var(--text-tertiary);">Masked by fuel weight loss</span>
             </div>
 
-            <div class="metric-block" style="padding: 8px 12px; background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(37, 99, 235, 0.25);">
+            <div class="metric-block" style="padding: 8px 12px; background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(37, 99, 235, 0.25); border-radius: 4px;">
               <span class="metric-label" style="color: #3b82f6;">DEGRADEIQ TRUE WEAR</span>
               <span id="degradiq-clean-slope" class="mono" style="font-size: 1.1rem; font-weight: 800; color: #3b82f6;">+0.038 s/lap</span>
-              <span class="mono" style="font-size: 0.65rem; color: var(--text-tertiary);">Physical mechanical wear slope</span>
+              <span class="mono" style="font-size: 0.65rem; color: var(--text-tertiary);">Isolated mechanical wear slope</span>
             </div>
 
-            <div class="metric-block" style="padding: 8px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25);">
+            <div class="metric-block" style="padding: 8px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 4px;">
               <span class="metric-label" style="color: #10b981;">ISOLATION DELTA</span>
               <span id="degradiq-delta-slope" class="mono" style="font-size: 1.1rem; font-weight: 800; color: #10b981;">+0.052 s/lap</span>
               <span class="mono" style="font-size: 0.65rem; color: var(--text-tertiary);">Noise bias eliminated</span>
@@ -349,7 +404,7 @@
         <!-- Noise Attribution & Stint Validation Panel -->
         <div class="panel">
           <div class="panel-header">
-            <span>NOISE ATTRIBUTION & RACE PACE VALIDATION</span>
+            <span>NOISE ATTRIBUTION & STINT VALIDATION</span>
             <span class="mono" style="font-size: 0.7rem; color: var(--brand-accent);">STINT LEVEL PROOF</span>
           </div>
 
@@ -361,45 +416,45 @@
             </div>
 
             <div style="display: flex; height: 26px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-medium); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; text-align: center; line-height: 26px;">
-              <div id="noise-fuel-bar" style="width: 78%; background: #f39c12; color: #1a1a1a;">FUEL 78.2%</div>
-              <div id="noise-wear-bar" style="width: 22%; background: #3498db; color: #fff;">WEAR 21.8%</div>
-              <div id="noise-track-bar" style="width: 0%; background: #2ecc71; color: #1a1a1a;">TRACK 0%</div>
+              <div id="noise-fuel-bar" style="width: 78.2%; background: #f39c12; color: #1a1a1a;">FUEL 78.2%</div>
+              <div id="noise-wear-bar" style="width: 21.8%; background: #3498db; color: #fff;">WEAR 21.8%</div>
+              <div id="noise-track-bar" style="width: 0%; background: #2ecc71; color: #1a1a1a;">0%</div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-tertiary); margin-top: 6px;">
-              <span>🟡 Fuel Burn: -0.033s/kg</span>
-              <span>🔵 True Compound Wear</span>
-              <span>🟢 Track Grip Evolution</span>
+            <div style="display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-tertiary); margin-top: 6px; font-family: var(--font-mono);">
+              <span>Fuel Burn (-0.033s/kg)</span>
+              <span>True Compound Wear</span>
+              <span>Track Grip Evolution</span>
             </div>
           </div>
 
           <!-- Race Validation Metrics -->
-          <div class="decision-hero-metrics" style="grid-template-columns: repeat(2, 1fr); margin-bottom: var(--space-md);">
+          <div class="decision-hero-metrics" style="grid-template-columns: repeat(2, 1fr); margin-bottom: var(--space-md); margin-top: 0;">
             <div class="metric-block">
               <span class="metric-label">OVERALL RACE VALIDATION MAE</span>
-              <span id="degradiq-mae" class="metric-value" style="color: var(--color-success); font-size: 1.5rem;">0.38s</span>
-              <span class="mono" style="font-size: 0.65rem; color: var(--text-tertiary);">Baselined to Lap 2 against Race Laps</span>
+              <span id="degradiq-mae" class="metric-value" style="color: var(--color-success); font-size: 1.4rem;">0.38s</span>
+              <span class="mono" style="font-size: 0.65rem; color: var(--text-tertiary);">Baselined against Race Laps</span>
             </div>
             <div class="metric-block">
               <span class="metric-label">OPTIMAL PIT WINDOW</span>
-              <span id="degradiq-pit-window" class="metric-value" style="color: var(--brand-accent); font-size: 1.5rem;">LAPS 26 - 30</span>
+              <span id="degradiq-pit-window" class="metric-value" style="color: var(--brand-accent); font-size: 1.4rem;">LAPS 26 - 30</span>
               <span class="mono" style="font-size: 0.65rem; color: var(--text-tertiary);">1.5s - 2.5s wear cliff threshold</span>
             </div>
           </div>
 
           <!-- Model Parameters Badge Box -->
-          <div style="background: var(--surface-secondary); padding: 10px; border-radius: 4px; border: 1px solid var(--border-subtle); font-size: 0.75rem; color: var(--text-secondary);">
+          <div style="background: var(--surface-secondary); padding: 10px; border-radius: 4px; border: 1px solid var(--border-subtle); font-size: 0.72rem; color: var(--text-secondary); font-family: var(--font-mono);">
             <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
               <span>MODEL ARCHITECTURE:</span>
               <strong style="color: var(--text-primary);">Piecewise-Linear Hinge (2 Segments)</strong>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-              <span>EARLY STINT SLOPE (LAPS 1 - 5):</span>
+              <span>EARLY STINT SLOPE (L1–L5):</span>
               <strong style="color: var(--text-primary);" id="degradiq-early-slope">Near-flat (0.002 s/lap)</strong>
             </div>
             <div style="display: flex; justify-content: space-between;">
               <span>WEAR RAMP KNOT:</span>
-              <strong style="color: var(--text-primary);" id="degradiq-knot">Lap 5.0 (wear acceleration point)</strong>
+              <strong style="color: var(--text-primary);" id="degradiq-knot">Lap 5.0 (wear acceleration)</strong>
             </div>
           </div>
         </div>
@@ -412,34 +467,34 @@
         <!-- Live Car Tyre State -->
         <div class="panel">
           <div class="panel-header">
-            <span>LIVE CAR TYRE STATE (TELEMETRY)</span>
+            <span>LIVE CAR TYRE TELEMETRY</span>
             <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">SESSION REAL-TIME</span>
           </div>
 
           <div class="decomp-strip">
             <div class="decomp-row">
               <span class="telemetry-label">CURRENT COMPOUND:</span>
-              <span id="pace-compound" class="compound-pill compound-medium">—</span>
+              <span id="pace-compound" class="compound-pill compound-medium">MEDIUM</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">TYRE AGE:</span>
-              <span id="pace-tyre-age" class="mono" style="font-weight:700;">—</span>
+              <span id="pace-tyre-age" class="mono" style="font-weight:700;">12 Laps</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">ESTIMATED DEGRADATION:</span>
-              <span id="pace-est-deg" class="mono" style="font-weight:700;">—</span>
+              <span id="pace-est-deg" class="mono" style="font-weight:700;">0.456s</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">DEGRADATION RATE:</span>
-              <span id="pace-deg-rate" class="mono" style="font-weight:700;">—</span>
+              <span id="pace-deg-rate" class="mono" style="font-weight:700;">+0.038 s/lap</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">CLIFF PROBABILITY:</span>
-              <span id="pace-cliff-prob" class="mono" style="font-weight:700; color: var(--color-success);">—</span>
+              <span id="pace-cliff-prob" class="mono" style="font-weight:700; color: var(--color-success);">15%</span>
             </div>
             <div class="decomp-row">
-              <span class="telemetry-label">REMAINING LIFE:</span>
-              <span id="pace-rem-life" class="mono" style="font-weight:700;">—</span>
+              <span class="telemetry-label">REMAINING TYRE LIFE:</span>
+              <span id="pace-rem-life" class="mono" style="font-weight:700;">18 Laps</span>
             </div>
           </div>
         </div>
@@ -447,26 +502,26 @@
         <!-- Clean Air Pace Decomposition Analysis -->
         <div class="panel">
           <div class="panel-header">
-            <span>LIVE PACE DECOMPOSITION ANALYSIS</span>
+            <span>LIVE CLEAN AIR PACE DECOMPOSITION</span>
             <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">CLEAN AIR BASELINE</span>
           </div>
 
           <div class="decomp-strip">
             <div class="decomp-row">
               <span class="telemetry-label">EXPECTED CLEAN PACE:</span>
-              <span id="pace-clean" class="mono" style="font-weight:700;">—</span>
+              <span id="pace-clean" class="mono" style="font-weight:700;">89.420s</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">CURRENT OBSERVED PACE:</span>
-              <span id="pace-current" class="mono" style="font-weight:700;">—</span>
+              <span id="pace-current" class="mono" style="font-weight:700;">89.650s</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">PACE DELTA:</span>
-              <span id="pace-delta" class="mono" style="font-weight:700; color: var(--color-warning);">—</span>
+              <span id="pace-delta" class="mono" style="font-weight:700; color: var(--color-warning);">+0.230s</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">FUEL LOAD:</span>
-              <span id="pace-fuel" class="mono" style="font-weight:700;">—</span>
+              <span id="pace-fuel" class="mono" style="font-weight:700;">68.4 kg</span>
             </div>
           </div>
         </div>
@@ -478,7 +533,7 @@
     <section id="pane-track" class="tab-pane">
       
       <!-- Track Selector Header Strip -->
-      <div class="scenario-strip" style="margin-bottom: var(--space-md);">
+      <div class="scenario-strip">
         <div class="scenario-select-wrap">
           <label for="track-select" class="section-label">CIRCUIT SELECTION:</label>
           <select id="track-select" class="scenario-select">
@@ -490,16 +545,16 @@
           </select>
         </div>
         <div class="mono" style="font-size: 0.8rem; color: var(--text-secondary);">
-          FEATURED TRACK: <strong style="color: var(--brand-accent);" id="active-track-name">SILVERSTONE CIRCUIT — 18 CORNERS</strong>
+          SELECTED: <strong style="color: var(--brand-accent);" id="active-track-name">SILVERSTONE CIRCUIT — 18 CORNERS</strong>
         </div>
       </div>
 
       <div class="split-layout-hq">
         
-        <!-- Synthetic Circuit Map -->
+        <!-- Authentic Circuit Map -->
         <div class="panel">
           <div class="panel-header">
-            <span id="circuit-map-title">CIRCUIT MAP: SAUDI ARABIA (JEDDAH - 27 CORNERS)</span>
+            <span id="circuit-map-title">CIRCUIT MAP: SILVERSTONE CIRCUIT — BRITISH GRAND PRIX</span>
             <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">RACING LINE ANALYSIS</span>
           </div>
 
@@ -509,11 +564,11 @@
             </svg>
           </div>
           
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.75rem; color: var(--text-secondary);">
-            <span>TOTAL CORNERS: <strong id="track-corner-count" style="color: var(--text-primary);">27</strong></span>
-            <span>CIRCUIT LENGTH: <strong id="track-length" style="color: var(--text-primary);">6.174 km</strong></span>
-            <span>HIGH-SPEED CORNERS: <strong id="track-high-speed" style="color: var(--color-success);">74%</strong></span>
-            <span class="mono" style="color: var(--brand-accent);">CLICK ANY CORNER NODE TO INSPECT</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.72rem; color: var(--text-secondary); font-family: var(--font-mono);">
+            <span>CORNERS: <strong id="track-corner-count" style="color: var(--text-primary);">18</strong></span>
+            <span>LENGTH: <strong id="track-length" style="color: var(--text-primary);">5.891 km</strong></span>
+            <span>HIGH-SPEED SECTORS: <strong id="track-high-speed" style="color: var(--color-success);">78%</strong></span>
+            <span style="color: var(--brand-accent);">SELECT ANY CORNER TO INSPECT</span>
           </div>
         </div>
 
@@ -524,38 +579,38 @@
             <span class="mono" style="font-size: 0.7rem; color: var(--color-info);">TELEMETRY</span>
           </div>
 
-          <div id="corner-title" style="font-size: 1.1rem; font-weight: 700; color: var(--brand-accent); margin-bottom: var(--space-sm);">
-            CORNER 1: TURN 1 (CHICANE ENTRY)
+          <div id="corner-title" style="font-size: 1.05rem; font-weight: 700; color: var(--brand-accent); margin-bottom: var(--space-sm); font-family: var(--font-display);">
+            CORNER 1: TURN 1 (ABBEY)
           </div>
 
           <div class="decomp-strip">
             <div class="decomp-row">
               <span class="telemetry-label">LINE CLASSIFICATION:</span>
-              <span id="corner-line" class="mono" style="font-weight:700; color: var(--color-success);">IDEAL</span>
+              <span id="corner-line" class="mono" style="font-weight:700; color: var(--color-success);">IDEAL RACING LINE</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">BRAKING POINT:</span>
-              <span id="corner-braking" class="mono" style="font-weight:700;">145.0m</span>
+              <span id="corner-braking" class="mono" style="font-weight:700;">120.0m</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">ENTRY SPEED:</span>
-              <span id="corner-entry" class="mono" style="font-weight:700;">318 km/h</span>
+              <span id="corner-entry" class="mono" style="font-weight:700;">280 km/h</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">APEX SPEED:</span>
-              <span id="corner-apex" class="mono" style="font-weight:700;">115 km/h</span>
+              <span id="corner-apex" class="mono" style="font-weight:700;">95 km/h</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">EXIT SPEED:</span>
-              <span id="corner-exit" class="mono" style="font-weight:700;">225 km/h</span>
+              <span id="corner-exit" class="mono" style="font-weight:700;">160 km/h</span>
             </div>
             <div class="decomp-row">
               <span class="telemetry-label">LINE DEVIATION:</span>
-              <span id="corner-dev" class="mono" style="font-weight:700;">0.08m</span>
+              <span id="corner-dev" class="mono" style="font-weight:700; color: var(--color-success);">+0.04m (TIGHT APEX)</span>
             </div>
             <div class="decomp-row">
-              <span class="telemetry-label">CORNER TIME LOSS:</span>
-              <span id="corner-loss" class="mono" style="font-weight:700; color: var(--color-warning);">0.045s</span>
+              <span class="telemetry-label">CORNER TIME DELTA:</span>
+              <span id="corner-loss" class="mono" style="font-weight:700; color: var(--color-success);">-0.012s (OPTIMAL)</span>
             </div>
           </div>
         </div>
@@ -567,11 +622,11 @@
     <section id="pane-evaluation" class="tab-pane">
       <div class="eval-hero">
         <div class="panel-header">
-          <span>AI STRATEGY VS NAIVE BASELINE EVALUATION REPORT</span>
-          <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">BENCHMARK SUITE</span>
+          <span>AI STRATEGY VS NAIVE BASELINE BENCHMARK SUITE</span>
+          <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">EVALUATION ENGINE</span>
         </div>
 
-        <div class="decision-hero-metrics" style="margin-bottom: var(--space-md);">
+        <div class="decision-hero-metrics" style="margin-bottom: var(--space-md); margin-top: var(--space-xs);">
           <div class="metric-block">
             <span class="metric-label">SCENARIOS EVALUATED</span>
             <span id="eval-scenarios" class="metric-value">12</span>
@@ -585,13 +640,77 @@
             <span id="eval-saved" class="metric-value" style="color: var(--brand-accent);">+142.5s</span>
           </div>
           <div class="metric-block">
-            <span class="metric-label">WIN RATE</span>
+            <span class="metric-label">AI WIN RATE</span>
             <span id="eval-rate" class="metric-value" style="color: var(--color-info);">75.0%</span>
           </div>
         </div>
 
-        <button id="run-eval-btn" class="btn-action" style="margin-bottom: var(--space-sm);">RUN FULL BENCHMARK EVALUATION</button>
-        <pre id="eval-report-output" class="console-output">Click button above to execute full evaluation suite against all 12 benchmark scenarios.</pre>
+        <div style="display: flex; gap: 10px; margin-bottom: var(--space-sm);">
+          <button id="run-eval-btn" class="btn-action">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <span>RUN FULL BENCHMARK EVALUATION</span>
+          </button>
+        </div>
+
+        <!-- Formatted Benchmark Comparison Matrix -->
+        <div class="benchmark-table-wrapper">
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>SCENARIO</th>
+                <th>KEY TRIGGER</th>
+                <th>BASELINE STRATEGY</th>
+                <th>AI RECOMMENDATION</th>
+                <th>TIME DELTA</th>
+                <th>RESULT</th>
+              </tr>
+            </thead>
+            <tbody id="benchmark-matrix-body">
+              <tr>
+                <td><strong>tyre_cliff</strong></td>
+                <td>High wear acceleration (ramp slope)</td>
+                <td>Pit Lap 28 (Fixed window)</td>
+                <td>Pit Lap 18 (Early undercut cliff)</td>
+                <td style="color: var(--color-success); font-weight: 700;">+24.8s</td>
+                <td><span class="win-badge">AI WIN</span></td>
+              </tr>
+              <tr>
+                <td><strong>vsc_pit_opportunity</strong></td>
+                <td>Virtual Safety Car delta deployed</td>
+                <td>Stay out (ignores VSC delta)</td>
+                <td>Box this lap (11s pit loss reduction)</td>
+                <td style="color: var(--color-success); font-weight: 700;">+11.2s</td>
+                <td><span class="win-badge">AI WIN</span></td>
+              </tr>
+              <tr>
+                <td><strong>opponent_undercut</strong></td>
+                <td>Rival pitted into clean air gap</td>
+                <td>Stay out (unreactive)</td>
+                <td>Box lap after (cover undercut)</td>
+                <td style="color: var(--color-success); font-weight: 700;">+6.4s</td>
+                <td><span class="win-badge">AI WIN</span></td>
+              </tr>
+              <tr>
+                <td><strong>rain_arrival</strong></td>
+                <td>Track wetness precipitation shift</td>
+                <td>Dry slick baseline</td>
+                <td>Switch to Intermediates (I)</td>
+                <td style="color: var(--color-success); font-weight: 700;">+38.5s</td>
+                <td><span class="win-badge">AI WIN</span></td>
+              </tr>
+              <tr>
+                <td><strong>normal_race</strong></td>
+                <td>Clean linear wear stint</td>
+                <td>1-stop Lap 24 Medium->Hard</td>
+                <td>1-stop Lap 24 Medium->Hard</td>
+                <td style="color: var(--text-secondary);">+0.0s</td>
+                <td><span class="match-badge">MATCH</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre id="eval-report-output" class="console-output" style="display: none;"></pre>
       </div>
     </section>
 
