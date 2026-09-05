@@ -27,16 +27,19 @@ The core backend package houses data ingestion, state estimation, strategy model
 
 ---
 
-## 🤖 2. `models/` — Machine Learning Components
+## 🔬 2. `degradiq/` — Tyre Degradation Isolation Subsystem
 
-Houses statistical and physics-informed models for long-term forecasting.
+Standalone, physics-informed analysis pipeline and interactive presentation dashboard designed specifically to solve TrackShift 2026's core tyre wear challenge.
 
 | Directory / File | Key Classes / Functions | Primary Responsibility |
 |---|---|---|
-| [`models/tyre_model/`](file:///e:/f1/models/tyre_model/) | `TyreModelFitter` | Grid-searched degradation curve parameters and Bayesian posterior updating. |
-| [`models/pace_model/`](file:///e:/f1/models/pace_model/) | `CompoundPacePredictor` | Compound-relative pace decomposition and fuel mass lap time correction. |
-| [`models/position_model/`](file:///e:/f1/models/position_model/) | `MonteCarloPositionPredictor` | 1,000-run stochastic trajectory simulation for finishing position probability distribution. |
-| [`models/uncertainty/`](file:///e:/f1/models/uncertainty/) | `UncertaintyEstimator` | Calculates confidence bounds and variance envelopes for strategy choices. |
+| [`degradiq/dashboard.py`](file:///e:/f1/degradiq/dashboard.py) | Streamlit App | Interactive dashboard: circuit/compound selector, before/after Plotly curves, noise attribution bar, race pace validation MAE, and pit-window advisory. |
+| [`degradiq/ingest.py`](file:///e:/f1/degradiq/ingest.py) | `ingest_practice_data`, `ingest_race_data` | FastF1 loader with caching for FP1-FP3 and Race sessions across Monza, Bahrain, and Spain. |
+| [`degradiq/pipeline.py`](file:///e:/f1/degradiq/pipeline.py) | `apply_defuel`, `apply_detraffic`, `run_pipeline` | De-fuels telemetry (0.033s/kg), removes in/out laps and traffic, extracts track evolution residuals. |
+| [`degradiq/model.py`](file:///e:/f1/degradiq/model.py) | `fit_degradation`, `predict_degradation` | Fits piecewise-linear (Hinge) degradation models per compound; prevents early stint over-prediction. |
+| [`degradiq/validation.py`](file:///e:/f1/degradiq/validation.py) | `validate_model`, `calculate_overall_mae` | Validates practice-derived wear against real race stints baselined to lap 2; reports MAE. |
+| [`degradiq/figures/`](file:///e:/f1/degradiq/figures/) | 300 DPI PNGs | Presentation charts for before/after curves and race pace validation (Monza Hard, Bahrain Soft, Spain Medium). |
+| [`degradiq/scripts/`](file:///e:/f1/degradiq/scripts/) | `generate_pngs.py`, `print_deck_numbers.py` | Standalone CLI utilities for batch figure generation and deck metric exports. |
 
 ---
 
@@ -93,14 +96,14 @@ Lightweight HTML5/Vanilla CSS/JavaScript dashboards.
 
 ## 🧪 7. `tests/` — Test Suite
 
-Comprehensive test coverage passing 252/252 tests cleanly.
+Comprehensive test coverage passing 256/256 tests cleanly.
 
 | Directory / File | Coverage Scope |
 |---|---|
-| [`tests/test_normalization.py`](file:///e:/f1/tests/test_normalization.py) | Normalization stages, clamping, outlier filtering, LOCF fallback. |
-| [`tests/test_state.py`](file:///e:/f1/tests/test_state.py) | Race state estimator, order tracking, gap calculations. |
-| [`tests/test_tyre.py`](file:///e:/f1/tests/test_tyre.py) | Tyre degradation fitting, cliff lap posterior detection. |
-| [`tests/test_strategy.py`](file:///e:/f1/tests/test_strategy.py) | Strategy decision optimizer, compound selection, pit window valuation. |
+| [`tests/test_normalization_stages.py`](file:///e:/f1/tests/test_normalization_stages.py) | Normalization stages, clamping, outlier filtering, LOCF fallback. |
+| [`tests/test_race_state.py`](file:///e:/f1/tests/test_race_state.py) | Race state estimator, order tracking, gap calculations. |
+| [`tests/test_tyre_model.py`](file:///e:/f1/tests/test_tyre_model.py) | Tyre degradation fitting, cliff lap posterior detection. |
+| [`tests/test_strategy_engine.py`](file:///e:/f1/tests/test_strategy_engine.py) | Strategy decision optimizer, compound selection, pit window valuation. |
 | [`tests/test_events.py`](file:///e:/f1/tests/test_events.py) | Event detector triggers across 15 event types. |
 | [`tests/test_scenarios.py`](file:///e:/f1/tests/test_scenarios.py) | End-to-end execution of all 12 seeded race scenarios. |
 | [`tests/test_disagreement.py`](file:///e:/f1/tests/test_disagreement.py) | Human vs AI disagreement detection rules. |

@@ -1,6 +1,6 @@
 # Developer Quick Start & Setup Guide
 
-This guide gets you up and running with **TrackShift 2026** on your local machine. It covers environment creation, dependency installation, running tests, executing the fast-forward interactive demo, and launching the live pitwall web application.
+This guide gets you up and running with **TrackShift 2026** and **DegradIQ** on your local machine. It covers environment creation, dependency installation, running tests, executing the interactive fast-forward race demo, and launching both the DegradIQ tyre degradation dashboard and the live pit wall web application.
 
 ---
 
@@ -53,49 +53,41 @@ pip install -e ".[dev,api,ml,realtime]"
 
 ---
 
-## 🧪 Running Unit & Integration Tests
+## 🔬 Running the DegradIQ Streamlit Dashboard
 
-The test suite validates all 30 engineering phases across 252 tests.
+**DegradIQ** is the dedicated tyre degradation isolation subsystem. It strips out fuel burn, track evolution, and traffic from practice telemetry, fits piecewise-linear hinge wear curves, and compares against actual race stint pace.
 
-```bash
-pytest
+To launch the Streamlit dashboard:
+
+```powershell
+degradiq\.venv\Scripts\python.exe -m streamlit run degradiq/dashboard.py
 ```
 
-To run tests with detailed verbosity:
-```bash
-pytest -v
-```
-
-To run a specific test subsystem (e.g. strategy engine or scenarios):
-```bash
-pytest tests/test_strategy.py
-pytest tests/test_scenarios.py
-```
+Features:
+- **Interactive Circuit / Compound Picker**: Monza (Hard), Bahrain (Soft), Spain (Medium).
+- **Before/After Degradation Curves**: Live Plotly comparison of raw lap times vs. true wear slopes.
+- **Noise Attribution Breakdown**: Fuel mass correction vs. true wear vs. track evolution.
+- **Race Validation Panel**: Lap-by-lap comparison against real race stints with verified MAE (e.g. Monza Hard MAE: 0.38s).
+- **Pit Window Recommendation**: Data-backed optimal pit stop window calculation.
 
 ---
 
-## 🏎️ Running the Interactive Fast-Forward Demo
+## 🏎️ Running the Interactive Race Intelligence Demo
 
-TrackShift includes a self-contained, interactive demo script ([`demo.py`](file:///e:/f1/demo.py)) that streams real-time telemetry from any of the 12 pre-built scenarios into the race intelligence engine.
+TrackShift includes an interactive demo script ([`demo.py`](file:///e:/f1/demo.py)) that streams real-time telemetry from any of the 12 pre-built scenarios into the race intelligence decision engine.
 
 ```bash
-python demo.py
+python demo.py --scenario tyre_cliff --speed 2.0
 ```
 
 ### Command-Line Arguments
 
 | Argument | Options | Description | Default |
 |---|---|---|---|
-| `--scenario` | `normal_race`, `tyre_cliff`, `vsc_pit_opportunity`, `sc_pit_opportunity`, `opponent_undercut`, `opponent_overcut`, `rain_arrival`, `heavy_traffic`, `telemetry_corruption`, `missing_telemetry`, `strategy_inferiority`, `driver_disagreement` | Selects which race scenario to simulate. | `normal_race` |
-| `--laps` | `1` to `70` | Total laps to run. | `30` |
-| `--speed` | `1.0`, `5.0`, `10.0`, `100.0` | Simulation speed multiplier. | `10.0` |
-
-### Example Command
-
-Simulate a rainy race with driver radio disagreement at 20x speed:
-```bash
-python demo.py --scenario driver_disagreement --laps 25 --speed 20.0
-```
+| `--scenario` | `normal_race`, `tyre_cliff`, `vsc_pit_opportunity`, `sc_pit_opportunity`, `opponent_undercut`, `opponent_overcut`, `rain_arrival`, `heavy_traffic`, `telemetry_corruption`, `missing_telemetry`, `strategy_inferiority`, `driver_disagreement` | Selects which race scenario to simulate. | `tyre_cliff` |
+| `--speed` | `1.0`, `2.0`, `5.0`, `10.0` | Simulation speed multiplier. | `2.0` |
+| `--port` | e.g. `8000` | Port for the live Pitwall API / WebSocket server. | `8000` |
+| `--cli-only` | Flag | Run terminal decision log only without starting web server. | `False` |
 
 ---
 
@@ -118,19 +110,41 @@ Open your browser and navigate to:
 
 ---
 
+## 🧪 Running Unit & Integration Tests
+
+The test suite validates the entire architecture across 256 tests:
+
+```bash
+pytest
+```
+
+To run tests with detailed verbosity:
+```bash
+pytest -v
+```
+
+To run a specific test subsystem (e.g. strategy engine or scenarios):
+```bash
+pytest tests/test_strategy_engine.py
+pytest tests/test_scenarios.py
+```
+
+---
+
 ## 📁 Repository Directory Overview
 
 ```
 e:\f1\
-├── backend/          Core engine: ingestion, normalization, estimators, strategy, WebSocket
-├── models/           Tyre degradation models, pace predictors, Monte Carlo position engine
+├── degradiq/         Tyre degradation isolation pipeline, Streamlit dashboard, figures, and scripts
+├── backend/          Core engine: ingestion, 10-stage normalization, estimators, strategy, WebSocket
 ├── simulator/        Physics telemetry generator, flag/weather injections, 12 race scenarios
 ├── radio/            Async transcript processing, NLP intent extractor, disagreement detector
 ├── evaluation/       Backtesting evaluation framework, metrics suite, latency benchmarking
 ├── frontend/         Pitwall hero dashboard, Strategic HQ, interactive 14-corner SVG track
-├── tests/            252 unit, integration, and scenario verification tests
+├── data/             Cached FastF1 telemetry & race session pickles
+├── tests/            256 unit, integration, and scenario verification tests (100% passing)
 ├── doc/              Full project documentation suite (You are here)
-├── demo.py           Fast-forward interactive CLI demo runner
+├── demo.py           Fast-forward interactive CLI & web demo runner
 ├── pyproject.toml    Project metadata & dependency definitions
 └── requirements.txt  Root requirements file
 ```
@@ -145,12 +159,8 @@ Ensure you installed the package in editable mode within your virtual environmen
 pip install -e ".[dev,api,ml,realtime]"
 ```
 
-### WebSocket Disconnections in Browser
-If the pitwall dashboard fails to receive live updates, ensure `uvicorn` is running on port `8000` and CORS is not blocked.
-
-### High Test Execution Time
-To run pytest in parallel across CPU cores:
-```bash
-pip install pytest-xdist
-pytest -n auto
+### Streamlit Dashboard Environment
+If running the DegradIQ dashboard, ensure you execute it using the DegradIQ virtual environment:
+```powershell
+degradiq\.venv\Scripts\python.exe -m streamlit run degradiq/dashboard.py
 ```

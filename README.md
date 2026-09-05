@@ -1,61 +1,66 @@
-# TrackShift 2026 — Race Intelligence Engine
+# TrackShift 2026 — Race Intelligence Engine & DegradIQ
 
 > We don't predict tyres. We predict decisions.
 
-A simulator-independent, real-time race intelligence engine. Tyre
-degradation isolation (the official TrackShift 2026 problem) is one
-intelligence layer inside a broader pipeline that turns noisy telemetry
-into explainable strategic decisions — PIT / STAY_OUT / UNDERCUT / OVERCUT /
-DEFEND / ATTACK, with a confidence, an expected outcome, and an
-invalidation condition attached to every one.
+An end-to-end, simulator-independent race intelligence platform built for **TrackShift 2026**.
 
-Full architecture, design rationale, and documented assumptions: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+The repository integrates two core layers:
+1. **DegradIQ (`degradiq/`)**: The dedicated **Tyre Degradation Isolation Subsystem** solving the core TrackShift 2026 challenge. Isolates true physical tyre wear from noisy practice telemetry (de-fueling, de-trafficking, track evolution cleaning), fits a piecewise-linear Hinge degradation model, validates against race pace with low MAE (e.g., 0.38s at Monza Hard), and visualizes results via an interactive Streamlit dashboard.
+2. **Race Intelligence Engine (`backend/`, `frontend/`, `simulator/`, `radio/`, `evaluation/`)**: Real-time pit wall decision engine turning telemetry into explainable strategic recommendations (`PIT`, `STAY_OUT`, `UNDERCUT`, `OVERCUT`, `DEFEND`, `ATTACK`) with confidence ratings, driver radio conflict detection, Monte Carlo position prediction, and interactive web dashboards.
 
-## Status
+Full documentation index and architecture guides: [doc/INDEX.md](doc/INDEX.md).
 
-**Phase 1 of 18 complete** — repository skeleton, the common `RaceTelemetry`
-schema, the `SourceAdapter` and `NormalizationStage` interfaces, and initial
-tests. See the roadmap table in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#development-roadmap)
-for what's next. Every directory with no code yet has its own `README.md`
-explaining what it will hold and in which phase.
+---
 
-## Layout
+## Repository Layout
 
 ```
-frontend/    pitwall + hq dashboards, shared components/charts, track viz
-backend/     ingestion → normalization → state → intelligence layers →
-             events → strategy → prediction → websocket
-models/      fitted ML components (tyre / pace / position / uncertainty)
-simulator/   telemetry generator, seeded scenarios, injectable events, replay
-radio/       async transcription + extraction (never blocks the decision loop)
-evaluation/  backtesting, metrics, stress tests, latency instrumentation
-tests/       unit + interface + scenario tests
-docs/        architecture and assumptions
+degradiq/    Tyre Degradation Isolation Subsystem (Streamlit dashboard, hinge models, validation)
+frontend/    Pit Wall & Strategic HQ dashboards, 14-corner SVG track viz, telemetry inspector
+backend/     Ingestion → 10-stage normalization → state estimation → pace/tyre/opponent estimators →
+             event detection → strategy decision engine → Monte Carlo prediction → WebSocket
+simulator/   Telemetry generator, seeded scenario engine (12 scenarios), pit stop simulation, replay
+radio/       Async audio transcription & human/AI conflict detection (5 disagreement rules)
+evaluation/  Backtesting engine, latency benchmarking (<2s targets), stress testing
+data/        Cached FastF1 telemetry & race session pickles
+doc/         Comprehensive 10-part technical documentation suite
+tests/       Unit, interface, scenario, and integration test suite (256/256 passing)
 ```
 
-## Getting started
+---
+
+## Quick Start
+
+### 1. DegradIQ Streamlit Dashboard (Tyre Wear Isolation)
+To view the interactive tyre degradation curves, noise attribution (fuel vs. track vs. wear), validation MAE, and pit-window recommendations:
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -e ".[dev]"
-pytest
+# Using the DegradIQ environment:
+degradiq\.venv\Scripts\python.exe -m streamlit run degradiq/dashboard.py
 ```
 
-`pip install -e ".[dev]"` installs just enough to run today's code and
-tests (`pydantic`, `pytest`). Heavier dependencies (`fastapi`, `numpy`,
-`xgboost`, ...) are declared as optional extras in
-[pyproject.toml](pyproject.toml) and get pulled in as later phases need
-them — see the `[project.optional-dependencies]` groups (`api`, `ml`,
-`realtime`).
+### 2. Race Intelligence Engine (Live Pit Wall Demo)
+To launch the end-to-end race decision engine with live scenario playback, embedded REST API, and web pit wall dashboard:
 
-## Engineering principles
+```bash
+# Using the main environment:
+.venv\Scripts\activate
+python demo.py --scenario tyre_cliff --speed 2.0 --port 8000
+```
+Open [http://localhost:8000](http://localhost:8000) in your browser to view the live Pit Wall & HQ dashboard.
 
-- Physics-informed models and statistics first; gradient boosting where it
-  measurably helps; deep learning only if it clears that bar.
-- The strategy engine decides. An LLM, if used at all, only explains.
-- No hard-coded demo numbers — every confidence, position, or time-loss
-  value shown anywhere must trace back to real (or simulator-generated)
-  input data flowing through the actual models.
-- No claimed real-F1 or FIA integration, and no claimed production
-  readiness. Interfaces are built so real integrations could attach later.
+### 3. Running Tests
+```bash
+.venv\Scripts\activate
+pytest
+```
+*All 256 unit, scenario, and integration tests passing.*
+
+---
+
+## Engineering Principles
+
+- **Physics-Informed Models First**: Physical degradation models (piecewise-linear hinge wear curve, fuel burn weight correction) take precedence; ML models validate and refine.
+- **Explainable Strategy**: The strategy engine decides (`PIT` / `STAY_OUT` / `UNDERCUT`); driver radio intelligence detects human-AI divergence; every recommendation carries an audit reason and confidence score.
+- **Zero Hallucinated Numbers**: Every confidence, degradation slope, and delta traces back to real FastF1 session telemetry or physics-calibrated simulation.
+- **Strict Subsystem Isolation**: DegradIQ operates as a self-contained analysis module while seamlessly providing calibrated tyre degradation parameters to the broader pit wall decision pipeline.
