@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from degradiq.ingest import ingest_practice_data, ingest_race_data
 from degradiq.pipeline import run_pipeline, apply_defuel, apply_detraffic, get_lap_seconds
 from degradiq.model import fit_degradation
-from degradiq.generate_pngs import calculate_noise_attribution
+from degradiq.scripts.generate_pngs import calculate_noise_attribution
 
 st.set_page_config(page_title="DegradIQ Dashboard", layout="wide", initial_sidebar_state="collapsed")
 
