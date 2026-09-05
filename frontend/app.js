@@ -16,67 +16,9 @@ let selectedCornerId = 1;
 let activeWebSocket = null;
 let isReplaying = false;
 
-// Detailed F1 Reference Circuit Definitions (Silverstone & Suzuka)
-const TRACK_DEFINITIONS = {
-  silverstone: {
-    name: "SILVERSTONE (BRITISH GP)",
-    fullName: "Silverstone Circuit — British Grand Prix",
-    lengthKm: "5.891 km",
-    cornerCount: 18,
-    highSpeedPct: "78%",
-    bankingAngle: "1.5°",
-    path: "M 100 300 L 120 180 C 140 120, 220 80, 320 80 C 420 80, 520 140, 620 100 C 720 60, 840 100, 900 180 C 950 250, 850 350, 700 340 C 550 330, 400 380, 250 380 C 150 380, 100 340, 100 300 Z",
-    corners: [
-      { id: 1, name: "Turn 1 (Abbey)", x: 120, y: 220, type: "High Speed", braking: 0, entry: 290, apex: 250, exit: 285 },
-      { id: 2, name: "Turn 2 (Farm)", x: 150, y: 160, type: "Flat Out", braking: 0, entry: 295, apex: 290, exit: 300 },
-      { id: 3, name: "Turn 3 (Village)", x: 220, y: 100, type: "Heavy Braking", braking: 110, entry: 290, apex: 110, exit: 175 },
-      { id: 4, name: "Turn 4 (The Loop)", x: 280, y: 80, type: "Hairpin Traction", braking: 90, entry: 175, apex: 85, exit: 160 },
-      { id: 5, name: "Turn 5 (Aintree)", x: 340, y: 80, type: "Acceleration", braking: 0, entry: 160, apex: 210, exit: 260 },
-      { id: 6, name: "Turn 6 (Brooklands)", x: 440, y: 100, type: "Medium Speed", braking: 145, entry: 305, apex: 145, exit: 215 },
-      { id: 7, name: "Turn 7 (Luffield)", x: 500, y: 125, type: "Long Sweeper", braking: 105, entry: 215, apex: 105, exit: 240 },
-      { id: 8, name: "Turn 8 (Woodcote)", x: 560, y: 130, type: "High Speed Exit", braking: 0, entry: 240, apex: 260, exit: 295 },
-      { id: 9, name: "Turn 9 (Copse)", x: 670, y: 80, type: "High Speed Sweeper", braking: 180, entry: 315, apex: 265, exit: 290 },
-      { id: 10, name: "Turn 10 (Maggotts)", x: 760, y: 80, type: "High Speed S", braking: 0, entry: 300, apex: 285, exit: 275 },
-      { id: 11, name: "Turn 11 (Becketts 1)", x: 820, y: 110, type: "High Speed S", braking: 190, entry: 275, apex: 235, exit: 220 },
-      { id: 12, name: "Turn 12 (Becketts 2)", x: 870, y: 150, type: "Medium Speed", braking: 160, entry: 220, apex: 195, exit: 210 },
-      { id: 13, name: "Turn 13 (Chapel)", x: 895, y: 200, type: "High Exit", braking: 0, entry: 210, apex: 240, exit: 285 },
-      { id: 14, name: "Turn 14 (Stowe)", x: 810, y: 310, type: "Heavy Braking", braking: 135, entry: 320, apex: 185, exit: 255 },
-      { id: 15, name: "Turn 15 (Vale)", x: 650, y: 340, type: "Chicane Entry", braking: 95, entry: 255, apex: 95, exit: 120 },
-      { id: 16, name: "Turn 16 (Club 1)", x: 550, y: 345, type: "Chicane Apex", braking: 105, entry: 120, apex: 105, exit: 140 },
-      { id: 17, name: "Turn 17 (Club 2)", x: 420, y: 375, type: "Traction Exit", braking: 0, entry: 140, apex: 160, exit: 210 },
-      { id: 18, name: "Turn 18 (Club Exit)", x: 260, y: 375, type: "Flat Out Straight", braking: 0, entry: 210, apex: 230, exit: 290 }
-    ]
-  },
-  suzuka: {
-    name: "SUZUKA (JAPANESE GP)",
-    fullName: "Suzuka Circuit — Japanese Grand Prix",
-    lengthKm: "5.807 km",
-    cornerCount: 18,
-    highSpeedPct: "80%",
-    bankingAngle: "2.5°",
-    path: "M 120 320 C 120 180, 250 80, 420 80 C 580 80, 720 120, 850 160 C 950 200, 920 320, 780 340 C 620 360, 450 280, 300 360 C 180 400, 120 380, 120 320 Z",
-    corners: [
-      { id: 1, name: "Turn 1 (First Corner)", x: 180, y: 220, type: "High Speed", braking: 170, entry: 315, apex: 240, exit: 210 },
-      { id: 2, name: "Turn 2", x: 240, y: 150, type: "Medium Speed", braking: 140, entry: 210, apex: 155, exit: 200 },
-      { id: 3, name: "Turn 3 (S Curve 1)", x: 300, y: 100, type: "High Speed S", braking: 0, entry: 245, apex: 215, exit: 230 },
-      { id: 4, name: "Turn 4 (S Curve 2)", x: 360, y: 85, type: "High Speed S", braking: 0, entry: 230, apex: 205, exit: 220 },
-      { id: 5, name: "Turn 5 (S Curve 3)", x: 420, y: 80, type: "High Speed S", braking: 0, entry: 220, apex: 190, exit: 210 },
-      { id: 6, name: "Turn 6 (S Curve 4)", x: 480, y: 85, type: "High Speed S", braking: 0, entry: 210, apex: 175, exit: 230 },
-      { id: 7, name: "Turn 7 (Dunlop Curve)", x: 560, y: 95, type: "Uphill Sweeper", braking: 0, entry: 230, apex: 220, exit: 260 },
-      { id: 8, name: "Turn 8 (Degner 1)", x: 650, y: 110, type: "Right Kink", braking: 180, entry: 275, apex: 195, exit: 180 },
-      { id: 9, name: "Turn 9 (Degner 2)", x: 720, y: 130, type: "Tight Right", braking: 120, entry: 180, apex: 135, exit: 190 },
-      { id: 10, name: "Turn 10 (Underpass)", x: 780, y: 150, type: "Straight", braking: 0, entry: 190, apex: 240, exit: 275 },
-      { id: 11, name: "Turn 11 (Hairpin)", x: 880, y: 180, type: "Heavy Braking Hairpin", braking: 70, entry: 280, apex: 75, exit: 145 },
-      { id: 12, name: "Turn 12 (200R)", x: 910, y: 250, type: "Flat Out", braking: 0, entry: 270, apex: 270, exit: 290 },
-      { id: 13, name: "Turn 13 (Spoon 1)", x: 860, y: 320, type: "Double Apex Left", braking: 165, entry: 290, apex: 175, exit: 185 },
-      { id: 14, name: "Turn 14 (Spoon 2)", x: 750, y: 345, type: "Apex Exit", braking: 140, entry: 185, apex: 150, exit: 240 },
-      { id: 15, name: "Turn 15 (130R)", x: 500, y: 300, type: "Ultra High Speed", braking: 0, entry: 310, apex: 290, exit: 315 },
-      { id: 16, name: "Turn 16 (Casio 1)", x: 380, y: 330, type: "Chicane Entry", braking: 85, entry: 315, apex: 85, exit: 110 },
-      { id: 17, name: "Turn 17 (Casio 2)", x: 300, y: 360, type: "Chicane Exit", braking: 0, entry: 110, apex: 110, exit: 170 },
-      { id: 18, name: "Turn 18 (Final Corner)", x: 180, y: 360, type: "Traction Straight", braking: 0, entry: 170, apex: 220, exit: 285 }
-    ]
-  }
-};
+// Detailed F1 Reference Circuit Definitions (FastF1 authentic telemetry)
+const TRACK_DEFINITIONS = (typeof window !== "undefined" && window.TRACK_DEFINITIONS) ? window.TRACK_DEFINITIONS : {};
+
 
 document.addEventListener("DOMContentLoaded", () => {
   setupTabs();

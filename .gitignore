@@ -23,6 +23,9 @@ out/
 # Data / model artifacts
 *.csv
 *.parquet
+*.ff1pkl
+*.sqlite
+degradiq/data_cache/
 models/**/*.pkl
 models/**/*.joblib
 !models/**/README.md
