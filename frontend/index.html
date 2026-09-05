@@ -3,255 +3,471 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrackShift 2026 Race Intelligence Engine</title>
+  <title>RacePulse — Real-Time Telemetry & Strategy Engine</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Top Navbar -->
-  <header class="navbar">
-    <div class="brand">
-      <span class="brand-badge">2026</span>
-      <span class="brand-title">TrackShift Race Intelligence</span>
+  <!-- Sticky Operational Shell Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <span class="brand-mark">F1</span>
+      <div>
+        <div class="brand-name">RacePulse</div>
+        <div class="brand-subtitle">Telemetry & Strategy Engine</div>
+      </div>
     </div>
-    
-    <nav class="nav-tabs">
-      <button class="nav-btn active" data-tab="pitwall">Pit Wall</button>
-      <button class="nav-btn" data-tab="hq">HQ Strategy</button>
-      <button class="nav-btn" data-tab="track">Track Viz</button>
-      <button class="nav-btn" data-tab="evaluation">Evaluation</button>
+
+    <nav class="app-nav">
+      <button class="nav-tab active" data-tab="pitwall">Pit Wall</button>
+      <button class="nav-tab" data-tab="hq">HQ Strategy</button>
+      <button class="nav-tab" data-tab="pace">Pace & Tyres</button>
+      <button class="nav-tab" data-tab="track">Track Control</button>
+      <button class="nav-tab" data-tab="evaluation">Evaluation</button>
     </nav>
 
-    <div class="status-indicator">
-      <span class="dot"></span>
-      <span id="ws-status">LIVE STREAM CONNECTED</span>
+    <div class="header-controls">
+      <span id="data-mode-badge" class="mode-badge sim">HISTORICAL REPLAY</span>
+      <div class="ws-indicator">
+        <span id="ws-dot" class="status-dot"></span>
+        <span id="ws-status-text">WS 5.0Hz</span>
+      </div>
     </div>
   </header>
 
-  <div class="main-container">
-    
-    <!-- Controls Bar -->
-    <div class="control-bar">
-      <div class="scenario-select-group">
-        <label for="scenario-select" style="font-size: 0.9rem; color: var(--text-muted);">SCENARIO BENCHMARK:</label>
-        <select id="scenario-select" class="select-input">
-          <option value="normal_race">Normal Race (Clean 20 Laps)</option>
-          <option value="tyre_cliff">Tyre Cliff (Soft Tyre Degradation)</option>
-          <option value="vsc_pit_opportunity">VSC Pit Opportunity</option>
-          <option value="sc_pit_opportunity">Safety Car Pit Opportunity</option>
-          <option value="opponent_undercut">Opponent Undercut</option>
-          <option value="opponent_overcut">Opponent Overcut</option>
-          <option value="rain_arrival">Rain Arrival (Weather Shift)</option>
-          <option value="heavy_traffic">Heavy Traffic (Dirty Air)</option>
-          <option value="telemetry_corruption">Telemetry Corruption (Noise)</option>
-          <option value="missing_telemetry">Missing Telemetry (LOCF)</option>
-          <option value="strategy_inferiority">Strategy Inferiority</option>
-          <option value="driver_disagreement">Driver Radio Disagreement</option>
+  <!-- Global Sticky Race Telemetry Status Bar -->
+  <div class="telemetry-bar">
+    <div class="telemetry-item">
+      <span class="telemetry-label">TRACK:</span>
+      <span id="bar-track-name" class="telemetry-val" style="color: var(--brand-accent);">SILVERSTONE (BRITISH GP)</span>
+    </div>
+    <div class="telemetry-item">
+      <span class="telemetry-label">LAP:</span>
+      <span id="bar-lap-val" class="telemetry-val">—</span>
+    </div>
+    <div class="telemetry-item">
+      <span class="telemetry-label">POS:</span>
+      <span id="bar-pos-val" class="telemetry-val" style="color: var(--color-success);">—</span>
+    </div>
+    <div class="telemetry-item">
+      <span class="telemetry-label">STINT:</span>
+      <span id="bar-compound-pill" class="compound-pill compound-medium">—</span>
+      <span id="bar-tyre-age" class="telemetry-val" style="margin-left: 4px;">—</span>
+    </div>
+    <div class="telemetry-item">
+      <span class="telemetry-label">DEG RATE:</span>
+      <span id="bar-deg-rate" class="telemetry-val">—</span>
+    </div>
+    <div class="telemetry-item">
+      <span class="telemetry-label">CLIFF RISK:</span>
+      <span id="bar-cliff-risk" class="telemetry-val">—</span>
+    </div>
+    <div class="telemetry-item">
+      <span class="telemetry-label">GAP AHEAD:</span>
+      <span id="bar-gap-ahead" class="telemetry-val">—</span>
+    </div>
+    <div class="telemetry-item">
+      <span class="telemetry-label">WEATHER:</span>
+      <span id="bar-weather" class="telemetry-val">—</span>
+    </div>
+    <div class="telemetry-item">
+      <span class="telemetry-label">FLAG:</span>
+      <span id="bar-flag" class="telemetry-val" style="color: var(--color-success);">GREEN</span>
+    </div>
+  </div>
+
+  <!-- Main Content Viewport -->
+  <main class="main-viewport">
+
+    <!-- Scenario & Benchmark Controls Bar -->
+    <div class="scenario-strip">
+      <div class="scenario-select-wrap">
+        <label for="scenario-select" class="section-label">BENCHMARK SCENARIO / REPLAY:</label>
+        <select id="scenario-select" class="scenario-select">
+          <option value="normal_race">Normal Race (Clean 20 Laps Stint)</option>
+          <option value="tyre_cliff">Tyre Cliff (Soft Tyre Degradation Cliff)</option>
+          <option value="vsc_pit_opportunity">VSC Pit Opportunity (Virtual Safety Car)</option>
+          <option value="sc_pit_opportunity">Safety Car Pit Opportunity (Full SC)</option>
+          <option value="opponent_undercut">Opponent Undercut (Rival Ahead Uncommitted)</option>
+          <option value="opponent_overcut">Opponent Overcut (Rival Pitting Early)</option>
+          <option value="rain_arrival">Rain Arrival (Weather Shift to Wet)</option>
+          <option value="heavy_traffic">Heavy Traffic (Stuck in Dirty Air)</option>
+          <option value="telemetry_corruption">Telemetry Corruption (Sensor Noise)</option>
+          <option value="missing_telemetry">Missing Telemetry (Packet Drop LOCF)</option>
+          <option value="strategy_inferiority">Strategy Inferiority (Baseline vs AI)</option>
+          <option value="driver_disagreement">Driver Disagreement (Radio vs Telemetry)</option>
         </select>
-        <button id="run-scenario-btn" class="btn-primary">RUN SCENARIO</button>
+        <button id="run-scenario-btn" class="btn-action">RUN SCENARIO</button>
+        <button id="toggle-replay-btn" class="btn-action" style="background: #10b981; color: #fff; margin-left: 8px;">▶ START HISTORICAL REPLAY</button>
       </div>
 
-      <div style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-cyan);">
-        LAP: <span id="current-lap-val" style="font-weight:700;">12</span> / 50
+      <div class="mono" style="font-size: 0.8rem; color: var(--text-secondary);">
+        PROVENANCE: <strong style="color: var(--color-success);" id="provenance-badge">REAL TELEMETRY (FastF1)</strong> | DRIVER: <strong style="color: var(--text-primary);">VER (#1)</strong>
       </div>
     </div>
 
-    <!-- TAB 1: PIT WALL DASHBOARD (Phase 22) -->
-    <section id="tab-pitwall" class="tab-content active">
+    <!-- TAB 1: PIT WALL (Primary Live Operating View) -->
+    <section id="pane-pitwall" class="tab-pane active">
       
-      <!-- Disagreement Alert Banner -->
+      <!-- Disagreement Alert Banner (Conditional) -->
       <div id="disagreement-banner" class="disagreement-banner" style="display: none;">
-        <span class="disagreement-icon">⚠️</span>
+        <div style="font-size: 1.2rem; color: var(--color-critical);">⚠️</div>
         <div>
-          <strong id="disagreement-title" style="color: var(--accent-red);">HUMAN / AI DISAGREEMENT DETECTED</strong>
-          <div id="disagreement-desc" style="font-size: 0.85rem; margin-top: 0.2rem;">Driver reports tyre graining over radio, but telemetry confirms healthy degradation rate (0.05s).</div>
+          <div id="disagreement-title" class="disagreement-title">HUMAN / AI DISAGREEMENT DETECTED</div>
+          <div id="disagreement-desc" class="disagreement-desc">Driver reports tyre degradation over radio, but telemetry confirms linear wear rate.</div>
         </div>
       </div>
 
-      <!-- Decision Hero Widget -->
-      <div class="decision-hero card">
-        <div class="card-title">OPTIMAL STRATEGY RECOMMENDATION</div>
-        <div id="hero-decision-action" class="decision-action">STAY OUT</div>
-        <div id="hero-decision-sub" style="font-size: 1.1rem; color: var(--text-muted);">EXTEND MEDIUM STINT</div>
+      <!-- STRATEGIC RECOMMENDATION DECISION HERO WIDGET -->
+      <div class="decision-hero-container">
+        <div class="decision-hero-header">
+          <span class="section-label">STRATEGIC DECISION ENGINE RECOMMENDATION</span>
+          <span id="hero-confidence-badge" class="mono" style="font-weight: 700; color: var(--color-success);">—</span>
+        </div>
 
-        <div class="decision-metrics">
-          <div class="metric-box">
-            <div id="metric-window" class="metric-val">LAP 16-18</div>
-            <div class="metric-lbl">RECOMMENDED WINDOW</div>
+        <div id="hero-action" class="decision-action-badge">STAY OUT</div>
+        <div id="hero-subtext" style="font-size: 0.9rem; color: var(--text-secondary);">EXTEND CURRENT STINT</div>
+
+        <div class="decision-hero-metrics">
+          <div class="metric-block">
+            <span class="metric-label">RECOMMENDED PIT WINDOW</span>
+            <span id="metric-window" class="metric-value">—</span>
           </div>
-          <div class="metric-box">
-            <div id="metric-compound" class="metric-val" style="color: var(--accent-amber);">HARD</div>
-            <div class="metric-lbl">TARGET COMPOUND</div>
+          <div class="metric-block">
+            <span class="metric-label">TARGET COMPOUND</span>
+            <span id="metric-compound" class="metric-value" style="color: var(--brand-accent);">—</span>
           </div>
-          <div class="metric-box">
-            <div id="metric-confidence" class="metric-val" style="color: var(--accent-green);">88%</div>
-            <div class="metric-lbl">MODEL CONFIDENCE</div>
+          <div class="metric-block">
+            <span class="metric-label">MODEL CONFIDENCE</span>
+            <span id="metric-confidence" class="metric-value" style="color: var(--color-success);">—</span>
           </div>
-          <div class="metric-box">
-            <div id="metric-gain" class="metric-val" style="color: var(--accent-cyan);">+1.2s</div>
-            <div class="metric-lbl">DELTA TIME GAIN</div>
+          <div class="metric-block">
+            <span class="metric-label">TIME GAIN DELTA</span>
+            <span id="metric-gain" class="metric-value" style="color: var(--color-info);">—</span>
           </div>
         </div>
       </div>
+      </div>
 
-      <div class="grid-pitwall" style="margin-top: 1.5rem;">
-        <!-- Strategic Reasons -->
-        <div class="card">
-          <div class="card-title">DECISION RATIONALE & PROVENANCE</div>
-          <ul id="reasons-list" class="reason-list">
+      <!-- PIT WALL SPLIT OPERATIONAL LAYOUT -->
+      <div class="split-layout-2col">
+        <!-- Decision Rationale & Risks -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>OPERATIONAL RATIONALE & INVALIDATION</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">OBJECTIVE EVALUATOR</span>
+          </div>
+          
+          <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-tertiary); margin-bottom: 6px; text-transform: uppercase;">Primary Reasons:</div>
+          <ul id="reasons-list" class="operational-list" style="margin-bottom: var(--space-md);">
             <li>Clean air gap ahead exceeds 4.5 seconds</li>
-            <li>Tyre degradation rate linear at 0.03s/lap</li>
+            <li>Tyre degradation rate stable at 0.030s/lap</li>
             <li>No traffic penalty predicted upon pit exit</li>
+          </ul>
+
+          <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-tertiary); margin-bottom: 6px; text-transform: uppercase;">Invalidation Risks:</div>
+          <ul id="risks-list" class="operational-list risk-list">
+            <li>VSC period ending before car reaches pit entry</li>
+            <li>Track temperature drop causing graining shift</li>
           </ul>
         </div>
 
-        <!-- Latest Radio Message -->
-        <div class="card">
-          <div class="card-title">DRIVER RADIO TRANSCRIPT (DEMO MODE)</div>
-          <div id="radio-speaker" style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: 700; margin-bottom: 0.5rem;">DRIVER (LAP 12):</div>
-          <blockquote id="radio-text" style="font-size: 1.1rem; font-style: italic; color: #fff; margin-bottom: 1rem;">
+        <!-- Driver Radio Transcript & Intent Extraction -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>DRIVER RADIO TRANSCRIPT & INTENT ANALYSIS</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--color-info);">NLP ENGINE</span>
+          </div>
+
+          <div id="radio-speaker" class="mono" style="font-weight: 700; color: var(--brand-accent); margin-bottom: 6px;">
+            DRIVER (LAP 12):
+          </div>
+          <blockquote id="radio-text" style="font-size: 1.05rem; font-style: italic; color: var(--text-primary); margin-bottom: var(--space-md); padding-left: var(--space-sm); border-left: 2px solid var(--border-strong);">
             "Tyres feel fine, pace is consistent."
           </blockquote>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">
-            DETECTED INTENTS: <span id="radio-intents" style="color: var(--accent-green); font-weight:700;">STRATEGY_STAY_OUT_REQUEST</span>
+
+          <div style="font-size: 0.75rem; color: var(--text-secondary);">
+            DETECTED INTENTS: <span id="radio-intents" class="mono" style="color: var(--color-success); font-weight: 700;">STRATEGY_STAY_OUT_REQUEST</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 2: HQ STRATEGY DASHBOARD (Phase 23) -->
-    <section id="tab-hq" class="tab-content">
-      <div class="grid-hq">
-        <!-- Multi-Car Race Leaderboard -->
-        <div class="card">
-          <div class="card-title">RACE ORDER & GAP TRACKING</div>
-          <table class="leaderboard-table">
+    <!-- TAB 2: HQ STRATEGY (Strategic Overview) -->
+    <section id="pane-hq" class="tab-pane">
+      <div class="split-layout-hq">
+        
+        <!-- Multi-Car Race Order & Gap Tracking Table -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>RACE ORDER & OPPONENT THREAT MATRIX</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">LIVE TIMING</span>
+          </div>
+
+          <table class="table-dense">
             <thead>
               <tr>
                 <th>POS</th>
                 <th>CAR</th>
                 <th>COMPOUND</th>
-                <th>TYRE AGE</th>
+                <th>AGE</th>
                 <th>DEG RATE</th>
                 <th>CLIFF PROB</th>
                 <th>GAP AHEAD</th>
+                <th>THREAT</th>
               </tr>
             </thead>
             <tbody id="leaderboard-body">
               <tr>
                 <td>1</td>
                 <td><strong>#44 (VER)</strong></td>
-                <td><span style="color: var(--accent-amber);">MEDIUM</span></td>
-                <td>12 laps</td>
-                <td>0.03s/lap</td>
-                <td>15%</td>
-                <td>-</td>
+                <td><span class="compound-pill compound-medium">MEDIUM</span></td>
+                <td class="table-cell-num">12 Laps</td>
+                <td class="table-cell-num">0.030s/lap</td>
+                <td class="table-cell-num">15%</td>
+                <td class="table-cell-num">-</td>
+                <td><span class="threat-low">NONE</span></td>
               </tr>
               <tr>
                 <td>2</td>
                 <td>#1 (HAM)</td>
-                <td><span style="color: var(--accent-red);">SOFT</span></td>
-                <td>14 laps</td>
-                <td>0.08s/lap</td>
-                <td style="color: var(--accent-red); font-weight:700;">78%</td>
-                <td>+2.4s</td>
+                <td><span class="compound-pill compound-soft">SOFT</span></td>
+                <td class="table-cell-num">14 Laps</td>
+                <td class="table-cell-num">0.080s/lap</td>
+                <td class="table-cell-num threat-high">78%</td>
+                <td class="table-cell-num">+2.4s</td>
+                <td><span class="threat-high">HIGH UNDERCUT</span></td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- Weather & Environmental Intelligence -->
-        <div class="card">
-          <div class="card-title">ENVIRONMENTAL INTELLIGENCE</div>
-          <div style="font-size: 2rem; font-weight: 800; margin: 1rem 0; color: var(--accent-cyan);" id="weather-status">DRY</div>
-          <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-            RAIN PROBABILITY: <strong id="rain-prob" style="color: var(--text-primary);">5%</strong>
+        <!-- Weather & Environmental Intelligence Forecast -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>ENVIRONMENTAL INTELLIGENCE</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">SENSORS</span>
           </div>
-          <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-            TRACK TEMP: <strong id="track-temp" style="color: var(--text-primary);">38.0°C</strong>
-          </div>
-          <div style="font-size: 0.9rem; color: var(--text-muted);">
-            AIR TEMP: <strong id="air-temp" style="color: var(--text-primary);">27.0°C</strong>
+
+          <div style="font-size: 1.8rem; font-weight: 800; color: var(--color-info); margin: var(--space-xs) 0;" id="weather-status">DRY</div>
+          
+          <div class="decomp-strip">
+            <div class="decomp-row">
+              <span class="telemetry-label">RAIN PROBABILITY:</span>
+              <span id="rain-prob" class="mono" style="font-weight:700;">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">TRACK TEMP:</span>
+              <span id="track-temp" class="mono" style="font-weight:700;">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">AIR TEMP:</span>
+              <span id="air-temp" class="mono" style="font-weight:700;">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">TRACK EVOLUTION:</span>
+              <span id="track-evolution" class="mono" style="font-weight:700;">—</span>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- TAB 3: TRACK VISUALIZATION (Phase 24) -->
-    <section id="tab-track" class="tab-content">
-      <div class="grid-track">
-        <!-- SVG Circuit Map -->
-        <div class="card">
-          <div class="card-title">SYNTHETIC CIRCUIT MAP (14 CORNERS)</div>
-          <div class="track-svg-container">
-            <svg class="track-svg" viewBox="0 0 800 400">
-              <!-- Track Outline -->
-              <path d="M 100 200 C 100 100, 300 80, 400 120 C 500 160, 600 100, 700 200 C 750 280, 650 340, 500 320 C 350 300, 200 350, 100 200 Z" 
-                    fill="none" stroke="#22304a" stroke-width="24" stroke-linecap="round"/>
-              <path d="M 100 200 C 100 100, 300 80, 400 120 C 500 160, 600 100, 700 200 C 750 280, 650 340, 500 320 C 350 300, 200 350, 100 200 Z" 
-                    fill="none" stroke="#00f0ff" stroke-width="3" stroke-dasharray="8 4" opacity="0.8"/>
+    <!-- TAB 3: PACE & TYRES (Investigation View) -->
+    <section id="pane-pace" class="tab-pane">
+      <div class="split-layout-2col">
+        
+        <!-- Tyre Degradation Intelligence -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>TYRE DEGRADATION INTELLIGENCE</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">PHYSICS FITTER</span>
+          </div>
 
-              <!-- Corner Markers -->
-              <circle class="corner-node" cx="150" cy="130" r="6" fill="#ff3b5c" data-corner="1" />
-              <circle class="corner-node" cx="280" cy="95" r="6" fill="#ff3b5c" data-corner="2" />
-              <circle class="corner-node" cx="400" cy="120" r="6" fill="#ff3b5c" data-corner="3" />
-              <circle class="corner-node" cx="520" cy="140" r="6" fill="#ff3b5c" data-corner="4" />
-              <circle class="corner-node" cx="620" cy="120" r="6" fill="#ff3b5c" data-corner="5" />
-              <circle class="corner-node" cx="710" cy="220" r="6" fill="#ff3b5c" data-corner="6" />
+          <div class="decomp-strip">
+            <div class="decomp-row">
+              <span class="telemetry-label">CURRENT COMPOUND:</span>
+              <span id="pace-compound" class="compound-pill compound-medium">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">TYRE AGE:</span>
+              <span id="pace-tyre-age" class="mono" style="font-weight:700;">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">ESTIMATED DEGRADATION:</span>
+              <span id="pace-est-deg" class="mono" style="font-weight:700;">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">DEGRADATION RATE:</span>
+              <span id="pace-deg-rate" class="mono" style="font-weight:700;">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">CLIFF PROBABILITY:</span>
+              <span id="pace-cliff-prob" class="mono" style="font-weight:700; color: var(--color-success);">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">REMAINING LIFE:</span>
+              <span id="pace-rem-life" class="mono" style="font-weight:700;">—</span>
+            </div>
+          </div>
+        </div>
 
-              <!-- Live Car Position Marker -->
-              <circle cx="400" cy="120" r="10" fill="#00f0ff" stroke="#fff" stroke-width="2">
-                <animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite"/>
-              </circle>
+        <!-- Pace Intelligence Decomposition -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>PACE DECOMPOSITION ANALYSIS</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">CLEAN AIR PACE</span>
+          </div>
+
+          <div class="decomp-strip">
+            <div class="decomp-row">
+              <span class="telemetry-label">EXPECTED CLEAN PACE:</span>
+              <span id="pace-clean" class="mono" style="font-weight:700;">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">CURRENT OBSERVED PACE:</span>
+              <span id="pace-current" class="mono" style="font-weight:700;">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">PACE DELTA:</span>
+              <span id="pace-delta" class="mono" style="font-weight:700; color: var(--color-warning);">—</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">FUEL LOAD:</span>
+              <span id="pace-fuel" class="mono" style="font-weight:700;">—</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 4: TRACK CONTROL (Spatial Reasoning View) -->
+    <section id="pane-track" class="tab-pane">
+      
+      <!-- Track Selector Header Strip -->
+      <div class="scenario-strip" style="margin-bottom: var(--space-md);">
+        <div class="scenario-select-wrap">
+          <label for="track-select" class="section-label">CIRCUIT SELECTION:</label>
+          <select id="track-select" class="scenario-select">
+            <option value="silverstone">Silverstone Circuit — British GP (18 Corners, 5.891 km)</option>
+            <option value="suzuka">Suzuka Circuit — Japanese GP (18 Corners, 5.807 km)</option>
+            <option value="saudi">Saudi Arabia — Jeddah Corniche Circuit (27 Corners, 6.174 km)</option>
+            <option value="spa">Belgium — Circuit de Spa-Francorchamps (19 Corners, 7.004 km)</option>
+            <option value="bahrain">Bahrain — Sakhir International Circuit (15 Corners, 5.412 km)</option>
+          </select>
+        </div>
+        <div class="mono" style="font-size: 0.8rem; color: var(--text-secondary);">
+          FEATURED TRACK: <strong style="color: var(--brand-accent);" id="active-track-name">SILVERSTONE CIRCUIT — 18 CORNERS</strong>
+        </div>
+      </div>
+
+      <div class="split-layout-hq">
+        
+        <!-- Synthetic Circuit Map -->
+        <div class="panel">
+          <div class="panel-header">
+            <span id="circuit-map-title">CIRCUIT MAP: SAUDI ARABIA (JEDDAH - 27 CORNERS)</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">RACING LINE ANALYSIS</span>
+          </div>
+
+          <div class="track-canvas-wrapper">
+            <svg id="circuit-svg" class="circuit-map" viewBox="0 0 1000 450">
+              <!-- SVG circuit layout populated dynamically by JS -->
             </svg>
           </div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.75rem; color: var(--text-secondary);">
+            <span>TOTAL CORNERS: <strong id="track-corner-count" style="color: var(--text-primary);">27</strong></span>
+            <span>CIRCUIT LENGTH: <strong id="track-length" style="color: var(--text-primary);">6.174 km</strong></span>
+            <span>HIGH-SPEED CORNERS: <strong id="track-high-speed" style="color: var(--color-success);">74%</strong></span>
+            <span class="mono" style="color: var(--brand-accent);">CLICK ANY CORNER NODE TO INSPECT</span>
+          </div>
         </div>
 
-        <!-- Corner Telemetry Inspector -->
-        <div class="card">
-          <div class="card-title">CORNER TELEMETRY INSPECTOR</div>
-          <div style="font-size: 1.2rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 1rem;" id="corner-title">CORNER 3 (MEDIUM HIGH SPEED)</div>
-          <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">LINE TYPE: <strong id="corner-line" style="color: var(--accent-green);">IDEAL</strong></div>
-          <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">BRAKING POINT: <strong id="corner-braking">145.0m</strong></div>
-          <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">ENTRY SPEED: <strong id="corner-entry">225 km/h</strong></div>
-          <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">APEX SPEED: <strong id="corner-apex">182 km/h</strong></div>
-          <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">EXIT SPEED: <strong id="corner-exit">248 km/h</strong></div>
-          <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">LINE DEVIATION: <strong id="corner-dev">0.12m</strong></div>
-          <div style="font-size: 0.9rem; color: var(--accent-amber);">CORNER TIME LOSS: <strong id="corner-loss">0.08s</strong></div>
+        <!-- Corner Telemetry Inspector Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>CORNER TELEMETRY INSPECTOR</span>
+            <span class="mono" style="font-size: 0.7rem; color: var(--color-info);">TELEMETRY</span>
+          </div>
+
+          <div id="corner-title" style="font-size: 1.1rem; font-weight: 700; color: var(--brand-accent); margin-bottom: var(--space-sm);">
+            CORNER 1: TURN 1 (CHICANE ENTRY)
+          </div>
+
+          <div class="decomp-strip">
+            <div class="decomp-row">
+              <span class="telemetry-label">LINE CLASSIFICATION:</span>
+              <span id="corner-line" class="mono" style="font-weight:700; color: var(--color-success);">IDEAL</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">BRAKING POINT:</span>
+              <span id="corner-braking" class="mono" style="font-weight:700;">145.0m</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">ENTRY SPEED:</span>
+              <span id="corner-entry" class="mono" style="font-weight:700;">318 km/h</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">APEX SPEED:</span>
+              <span id="corner-apex" class="mono" style="font-weight:700;">115 km/h</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">EXIT SPEED:</span>
+              <span id="corner-exit" class="mono" style="font-weight:700;">225 km/h</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">LINE DEVIATION:</span>
+              <span id="corner-dev" class="mono" style="font-weight:700;">0.08m</span>
+            </div>
+            <div class="decomp-row">
+              <span class="telemetry-label">CORNER TIME LOSS:</span>
+              <span id="corner-loss" class="mono" style="font-weight:700; color: var(--color-warning);">0.045s</span>
+            </div>
+          </div>
         </div>
+
       </div>
     </section>
 
-    <!-- TAB 4: BACKTESTING & EVALUATION (Phase 20/21) -->
-    <section id="tab-evaluation" class="tab-content">
-      <div class="card">
-        <div class="card-title">AI STRATEGY VS NAIVE BASELINE EVALUATION REPORT</div>
-        <div class="decision-metrics" style="margin-bottom: 1.5rem;">
-          <div class="metric-box">
-            <div id="eval-scenarios" class="metric-val">12</div>
-            <div class="metric-lbl">SCENARIOS EVALUATED</div>
+    <!-- TAB 5: EVALUATION (Laboratory Proof View) -->
+    <section id="pane-evaluation" class="tab-pane">
+      <div class="eval-hero">
+        <div class="panel-header">
+          <span>AI STRATEGY VS NAIVE BASELINE EVALUATION REPORT</span>
+          <span class="mono" style="font-size: 0.7rem; color: var(--text-tertiary);">BENCHMARK SUITE</span>
+        </div>
+
+        <div class="decision-hero-metrics" style="margin-bottom: var(--space-md);">
+          <div class="metric-block">
+            <span class="metric-label">SCENARIOS EVALUATED</span>
+            <span id="eval-scenarios" class="metric-value">12</span>
           </div>
-          <div class="metric-box">
-            <div id="eval-wins" class="metric-val" style="color: var(--accent-green);">9</div>
-            <div class="metric-lbl">AI STRATEGY WINS</div>
+          <div class="metric-block">
+            <span class="metric-label">AI STRATEGY WINS</span>
+            <span id="eval-wins" class="metric-value" style="color: var(--color-success);">9</span>
           </div>
-          <div class="metric-box">
-            <div id="eval-saved" class="metric-val" style="color: var(--accent-cyan);">+142.5s</div>
-            <div class="metric-lbl">TOTAL RACE TIME SAVED</div>
+          <div class="metric-block">
+            <span class="metric-label">TOTAL TIME SAVED</span>
+            <span id="eval-saved" class="metric-value" style="color: var(--brand-accent);">+142.5s</span>
+          </div>
+          <div class="metric-block">
+            <span class="metric-label">WIN RATE</span>
+            <span id="eval-rate" class="metric-value" style="color: var(--color-info);">75.0%</span>
           </div>
         </div>
 
-        <button id="run-eval-btn" class="btn-primary" style="margin-bottom: 1rem;">RUN FULL BENCHMARK EVALUATION</button>
-        <div id="eval-report-output" style="font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 8px; max-height: 300px; overflow-y: auto;">
-          Click button above to execute full evaluation suite.
-        </div>
+        <button id="run-eval-btn" class="btn-action" style="margin-bottom: var(--space-sm);">RUN FULL BENCHMARK EVALUATION</button>
+        <pre id="eval-report-output" class="console-output">Click button above to execute full evaluation suite against all 12 benchmark scenarios.</pre>
       </div>
     </section>
 
-  </div>
+  </main>
 
   <script src="app.js"></script>
 </body>
