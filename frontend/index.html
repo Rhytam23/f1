@@ -24,7 +24,7 @@
     <nav class="app-nav">
       <button class="nav-tab active" data-tab="pitwall">Pit Wall</button>
       <button class="nav-tab" data-tab="hq">HQ Strategy</button>
-      <button class="nav-tab" data-tab="pace">DegradIQ (Tyres & Pace)</button>
+      <button class="nav-tab" data-tab="pace">DegradeIQ</button>
       <button class="nav-tab" data-tab="track">Track Control</button>
       <button class="nav-tab" data-tab="evaluation">Evaluation</button>
     </nav>
@@ -277,13 +277,13 @@
       </div>
     </section>
 
-    <!-- TAB 3: DEGRADIQ (PACE & TYRES) -->
+    <!-- TAB 3: DEGRADEIQ -->
     <section id="pane-pace" class="tab-pane">
       
-      <!-- DegradIQ Subsystem Header Strip -->
+      <!-- DegradeIQ Subsystem Header Strip -->
       <div class="scenario-strip" style="margin-bottom: var(--space-md); flex-wrap: wrap; gap: 10px;">
         <div class="scenario-select-wrap" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span style="background: rgba(255, 85, 0, 0.15); color: var(--brand-accent); border: 1px solid var(--brand-accent); padding: 4px 10px; border-radius: 3px; font-weight: 800; font-family: var(--font-mono); font-size: 0.75rem;">DEGRADIQ ENGINE</span>
+          <span style="background: rgba(255, 85, 0, 0.15); color: var(--brand-accent); border: 1px solid var(--brand-accent); padding: 4px 10px; border-radius: 3px; font-weight: 800; font-family: var(--font-mono); font-size: 0.75rem;">DEGRADEIQ ENGINE</span>
           <label for="degradiq-circuit-select" class="section-label" style="margin-left: 6px;">CIRCUIT:</label>
           <select id="degradiq-circuit-select" class="scenario-select">
             <option value="monza">Monza — Italian GP</option>
@@ -301,19 +301,19 @@
         
         <div>
           <a href="http://localhost:8501" target="_blank" class="btn-action" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; padding: 6px 14px; background: #2563eb; color: #fff; font-weight: 700;">
-            <span>🚀 OPEN FULL DEGRADIQ STREAMLIT APP</span>
+            <span>🚀 OPEN FULL DEGRADEIQ STREAMLIT APP</span>
             <span class="mono" style="font-size: 0.65rem; opacity: 0.85;">(:8501) ↗</span>
           </a>
         </div>
       </div>
 
-      <!-- DegradIQ Core Analysis (Raw vs Corrected & Validation) -->
+      <!-- DegradeIQ Core Analysis (Raw vs Corrected & Validation) -->
       <div class="split-layout-hq" style="margin-bottom: var(--space-md);">
         
         <!-- Before/After Degradation Curve Panel -->
         <div class="panel">
           <div class="panel-header">
-            <span>DEGRADIQ — TRUE TYRE WEAR ISOLATION (RAW VS CORRECTED)</span>
+            <span>DEGRADEIQ — TRUE TYRE WEAR ISOLATION (RAW VS CORRECTED)</span>
             <span class="mono" style="font-size: 0.7rem; color: var(--color-success);" id="degradiq-model-type">HINGE PIECEWISE-LINEAR FIT</span>
           </div>
 
@@ -333,7 +333,7 @@
             </div>
 
             <div class="metric-block" style="padding: 8px 12px; background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(37, 99, 235, 0.25);">
-              <span class="metric-label" style="color: #3b82f6;">DEGRADIQ TRUE WEAR</span>
+              <span class="metric-label" style="color: #3b82f6;">DEGRADEIQ TRUE WEAR</span>
               <span id="degradiq-clean-slope" class="mono" style="font-size: 1.1rem; font-weight: 800; color: #3b82f6;">+0.038 s/lap</span>
               <span class="mono" style="font-size: 0.65rem; color: var(--text-tertiary);">Physical mechanical wear slope</span>
             </div>

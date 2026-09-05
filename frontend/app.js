@@ -731,7 +731,7 @@ function renderDegradIQPlot(circuit, compound) {
       
       <line x1="160" y1="0" x2="180" y2="0" stroke="#3b82f6" stroke-width="2.5" />
       <circle cx="170" cy="0" r="3.5" fill="#3b82f6" />
-      <text x="186" y="3" fill="#3b82f6" font-size="10" font-family="JetBrains Mono">DegradIQ (True Wear)</text>
+      <text x="186" y="3" fill="#3b82f6" font-size="10" font-family="JetBrains Mono">DegradeIQ (True Wear)</text>
     </g>
   `;
 

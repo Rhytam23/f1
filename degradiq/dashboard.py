@@ -7,9 +7,9 @@ from degradiq.pipeline import run_pipeline, apply_defuel, apply_detraffic, get_l
 from degradiq.model import fit_degradation
 from degradiq.scripts.generate_pngs import calculate_noise_attribution
 
-st.set_page_config(page_title="DegradIQ Dashboard", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="DegradeIQ Dashboard", layout="wide", initial_sidebar_state="collapsed")
 
-st.title("DegradIQ — isolating true tyre wear from F1 practice data")
+st.title("DegradeIQ — isolating true tyre wear from F1 practice data")
 st.markdown("---")
 
 @st.cache_data
