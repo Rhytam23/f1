@@ -50,11 +50,6 @@ class RadioIngestRequest(BaseModel):
     speaker: str = "DRIVER"
 
 
-@app.get("/")
-def read_root():
-    return FileResponse("frontend/index.html")
-
-
 @app.get("/api/health")
 def health_check():
     return {
@@ -411,4 +406,8 @@ async def race_websocket_endpoint(websocket: WebSocket):
         if replay_task and not replay_task.done():
             replay_task.cancel()
         manager.disconnect(websocket)
+
+# Mount frontend static directory at root to serve styles.css, app.js, and index.html
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+
 
